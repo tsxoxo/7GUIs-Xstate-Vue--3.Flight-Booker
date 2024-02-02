@@ -32,7 +32,7 @@ const { snapshot, send } = useMachine(flightMachine, {
   <div class="center-children">
     <label for="return-date">Return Date</label>
     <input :disabled="snapshot.context.flightType === 'one-way'"
-      :class="{ invalidDateInput: !snapshot.context.returnDate.isValid }"
+      :class="{ invalidDateInput: snapshot.context.flightType !== 'one-way' && !snapshot.context.returnDate.isValid }"
       @input="(event) => send({ type: 'changeReturnDate', value: (event!.target as HTMLInputElement)!.value })"
       :value="snapshot.context.returnDate.date" type="text" id="return-date" required minlength="6" maxlength="10"
       size="10" />
