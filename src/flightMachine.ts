@@ -3,7 +3,7 @@ import { setup, assign } from 'xstate';
 const INITIAL_DATE = '02.02.2024'
 
 const checkIfDatesFeasible = (startDate: string, ReturnDate: string) => {
-  return startDate > ReturnDate
+  return new Date(startDate) <= new Date(ReturnDate)
 }
 const isValidDate = (s: string) => {
   var separators = ['\\.', '\\-', '\\/'];
@@ -12,7 +12,7 @@ const isValidDate = (s: string) => {
   return d.getFullYear() == bits[2] && d.getMonth() + 1 == bits[1];
 }
 
-export const machine = setup({
+export const flightMachine = setup({
   "types": {
     events: {} as
       { type: 'changeStartDate', 'value': string } |
@@ -96,4 +96,5 @@ export const machine = setup({
         },
       }
     },
-  })
+  }
+})
