@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Counter from './Counter.vue'
+import FlightBooker from './FlightBooker.vue'
 </script>
 
 <template>
-  <Counter />
+  <FlightBooker />
 </template>
