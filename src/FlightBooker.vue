@@ -31,20 +31,22 @@ const { snapshot, send } = useMachine(flightMachine, {
     </div>
     <!-- <label for="pet-select">Flight Type</label> -->
     <!-- <label for="start-date">Start Date</label> -->
-    <input :class="{ invalidDateInput: !snapshot.context.startDate.isValid }"
+    <input :class="{ 'invalid-date-input': !snapshot.context.startDate.isValid }"
       @input="(event) => send({ type: 'changeStartDate', value: (event!.target as HTMLInputElement)!.value })"
       :value="snapshot.context.startDate.date" type="text" id="start-date" required minlength="6" maxlength="10"
       size="10" />
     <!-- <label for="return-date">Return Date</label> -->
     <input :disabled="snapshot.context.flightType === 'one-way'"
-      :class="{ invalidDateInput: snapshot.context.flightType !== 'one-way' && !snapshot.context.returnDate.isValid }"
+      :class="{ 'invalid-date-input': snapshot.context.flightType !== 'one-way' && !snapshot.context.returnDate.isValid }"
       @input="(event) => send({ type: 'changeReturnDate', value: (event!.target as HTMLInputElement)!.value })"
       :value="snapshot.context.returnDate.date" type="text" id="return-date" required minlength="6" maxlength="10"
       size="10" />
   </div>
-  <div id="button-wrapper" class="center-children">
-    <button :disabled="!snapshot.context.canBook" @click="send({ type: 'book' })" value="Book flight">
-    </button>
-    <p id="button-label">Book flight</p>
+  <div id="button-and-label" class="center-children">
+    <div id="button-wrapper">
+      <button :disabled="!snapshot.context.canBook" @click="send({ type: 'book' })" value="Book flight">
+      </button>
+    </div>
+    <p class="center-children" id="button-label">Book flight</p>
   </div>
 </template>
