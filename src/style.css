@@ -65,7 +65,7 @@ main {
     display: flex;
     padding: 32px 32px;
     flex-direction: column;
-    /* align-items: center; */
+    align-items: center;
     gap: 40px;
 
     text-align: center;
@@ -81,6 +81,38 @@ main {
 #select-and-inputs {
     padding: 8px;
     place-items: stretch;
+}
+#radio-buttons {
+    display: flex;
+}
+.radio-button-wrapper {
+    /* position: relative;
+    width: min-content;
+    height: min-content; */
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+}
+.radio-button-wrapper > * {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+}
+input[type="radio"] {
+    appearance: none;
+    width: 96px;
+    height: 96px;
+    /* padding: 8px; */
+
+    background: black;
+    outline: 4px white solid;
+}
+input[type="radio"]:checked {
+    color: yellow;
+    outline: 4px yellow solid;
+}
+.radio-button-wrapper label {
+    text-transform: uppercase;
+    z-index: 9999;
 }
 select {
     /* align-self: stretch; */

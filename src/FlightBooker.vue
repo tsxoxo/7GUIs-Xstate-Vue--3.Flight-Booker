@@ -15,6 +15,16 @@ const { snapshot, send } = useMachine(flightMachine, {
 
 <template>
   <div class="center-children" id="select-and-inputs">
+    <div id="radio-buttons">
+      <div class="radio-button-wrapper">
+        <input type="radio" name="flight-type" id="one-way" value="one-way" checked />
+        <label for="one-way">One Way</label>
+      </div>
+      <div class="radio-button-wrapper">
+        <input type="radio" name="flight-type" id="return" value="return" />
+        <label for="return">Return</label>
+      </div>
+    </div>
     <!-- <label for="pet-select">Flight Type</label> -->
     <select @change="(event) => send({ type: 'changeFlightType', value: (event!.target as HTMLInputElement)!.value })"
       name="pets" id="pet-select" size="2">
