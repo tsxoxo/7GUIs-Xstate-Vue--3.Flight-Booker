@@ -11,11 +11,24 @@
 :root {
     font-family: "Averia Libre", system-ui, sans-serif;
     font-weight: 400;
-    --color-primary: #eafc9e;
-    --color-disabled: #aeb0a7;
-    --color-bg: #a7ae99;
-    --color-frame: #b9bfa7;
-    --color-inputs-before-button: #8e9d7a;
+    --color-dark: #24241b;
+    --color-light: #e6e9da;
+    /* #TODO increase contrast between disabled and checked radio, possibly making font bold */
+    --color-input-disabled: #aeb0a7;
+    --color-body-bg: #a7ae99;
+    --color-frame-bg: #b9bfa7;
+    --color-inputs-before-button-bg: #8e9d7a;
+    --color-radio-checked: #eafc9e;
+    --color-button-border-above: radial-gradient(
+        circle farthest-corner at center bottom,
+        hsl(0, 0%, 0% / 30%) 0%,
+        hsl(0, 0%, 100% / 30%) 100%
+    );
+    --color-button-border-below: radial-gradient(
+        circle farthest-corner at center,
+        hsl(60, 14%, 12%) 0%,
+        hsl(60, 14%, 12%) 100%
+    );
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -28,7 +41,7 @@ body {
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    background: var(--color-bg);
+    background: var(--color-body-bg);
 }
 
 .center-children {
@@ -45,10 +58,10 @@ main {
     align-items: center;
     gap: 12px;
     padding: 12px 12px;
-    width: 228px;
+    /* width: 228px; */
     height: 310px;
 
-    background: var(--color-frame);
+    background: var(--color-frame-bg);
     box-shadow: 0px 2px 2px -1px rgba(119, 129, 98, 0.2),
         0px 3px 6px rgba(81, 86, 69, 0.1),
         inset 0px 5px 3px -2px rgba(210, 213, 200, 0.25),
@@ -62,16 +75,21 @@ main {
     flex: none;
     place-items: stretch;
     padding: 12px 24px;
-    background: var(--color-inputs-before-button);
+    background: var(--color-inputs-before-button-bg);
 }
 #radio-buttons {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(100px, 1fr));
     gap: 8px;
 }
 .radio-button-wrapper {
+    /* flex-grow: 1; */
     display: grid;
     place-items: center;
     isolation: isolate;
+    /* min-width: min-content; */
+    width: 100%;
+    aspect-ratio: 1 / 1;
 }
 .radio-button-wrapper > * {
     grid-column: 1 / -1;
@@ -79,25 +97,40 @@ main {
 }
 input[type="radio"] {
     appearance: none;
-    width: 74px;
-    height: 74px;
-    /* padding: 8px; */
+    width: 100%;
+    height: 100%;
+    /* width: 74px;
+    height: 74px; */
 
-    background: black;
-    color: var()
-    outline: 3px white solid;
-    outline-offset: -3px;
+    background: var(--color-dark);
+    color: var(--color-body-bg);
+    outline: 5px var(--color-light) solid;
+    outline-offset: -5px;
 }
-input[type="radio"]:checked {
-    color: yellow;
-    outline: 4px yellow solid;
+input[type="radio"]::before {
+    content: "";
 }
-.radio-button-wrapper label {
+input[type="radio"] + label {
+    /* padding: 8px; */
+    overflow-wrap: normal;
+    color: var(--color-light);
+    font-weight: 600;
     text-transform: uppercase;
     z-index: 9999;
 }
+input[type="radio"]:checked {
+    outline: 5px var(--color-radio-checked) solid;
+}
+input[type="radio"]:checked + label {
+    /* -webkit-text-fill-color: var(--color-radio-checked);
+    -webkit-text-stroke: 1px var(--color-radio-checked); */
+
+    font-weight: 900;
+    color: var(--color-radio-checked);
+}
 
 .invalidDateInput {
+    /* #TODO */
     background: red;
 }
 #button-wrapper {
