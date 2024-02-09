@@ -4,15 +4,18 @@
     position: relative;
     box-sizing: border-box;
     margin: 0;
-    outline: 1px dashed white;
+    /* outline: 1px dashed white; */
+    text-align: center;
 }
 
 :root {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
+    font-family: "Averia Libre", system-ui, sans-serif;
     font-weight: 400;
-    --color-primary: #40e0d0;
-    --color-bg: #9ca58a;
+    --color-primary: #eafc9e;
+    --color-disabled: #aeb0a7;
+    --color-bg: #a7ae99;
+    --color-frame: #b9bfa7;
+    --color-inputs-before-button: #8e9d7a;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -36,59 +39,36 @@ body {
     place-items: center;
 }
 
-/*.frame {
-    display: flex;
-    width: 236px;
-    height: 474px;
-    padding: 16px 20px 64px 20px;
-    flex-direction: column;
-    align-items: center;
-    flex-shrink: 0;
-    border-radius: 8px 8px 32px 32px;
-    background: linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0) 96.31%,
-            rgba(230, 233, 218, 0.2) 100%
-        ),
-        linear-gradient(
-            180deg,
-            rgba(0, 0, 0, 0) 94.83%,
-            rgba(72, 75, 56, 0.1) 100%
-        ),
-        #aab397;
-    box-shadow: -5px 2px 4.6px 0px rgba(80, 83, 64, 0.5),
-        5px 2px 4.6px 0px rgba(80, 83, 64, 0.5),
-        0px 16px 4.6px -6px rgba(80, 83, 64, 0.5);
-}*/
-
 main {
     display: flex;
-    padding: 32px 32px;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    gap: 12px;
+    padding: 12px 12px;
+    width: 228px;
+    height: 310px;
 
-    text-align: center;
-
-    border-radius: 8px;
-    background: #484b38;
-    box-shadow: 0px -6px 2px 0px hsla(72, 25%, 88%, 0.85) inset,
-        6px 4px 4px 0px rgba(20, 19, 11, 0.25) inset,
-        -6px 4px 4px 0px rgba(20, 19, 11, 0.25) inset;
-
-    color: #e6e9da;
+    background: var(--color-frame);
+    box-shadow: 0px 2px 2px -1px rgba(119, 129, 98, 0.2),
+        0px 3px 6px rgba(81, 86, 69, 0.1),
+        inset 0px 5px 3px -2px rgba(210, 213, 200, 0.25),
+        inset 0px -2px 5px 1px rgba(138, 145, 116, 0.25);
+    border-radius: 6px 6px 18px 18px;
 }
-#select-and-inputs {
-    padding: 8px;
+#inputs-before-button {
+    min-width: 204px;
+    height: 176px;
+    display: flex;
+    flex: none;
     place-items: stretch;
+    padding: 12px 24px;
+    background: var(--color-inputs-before-button);
 }
 #radio-buttons {
     display: flex;
+    gap: 8px;
 }
 .radio-button-wrapper {
-    /* position: relative;
-    width: min-content;
-    height: min-content; */
     display: grid;
     place-items: center;
     isolation: isolate;
@@ -99,12 +79,14 @@ main {
 }
 input[type="radio"] {
     appearance: none;
-    width: 96px;
-    height: 96px;
+    width: 74px;
+    height: 74px;
     /* padding: 8px; */
 
     background: black;
-    outline: 4px white solid;
+    color: var()
+    outline: 3px white solid;
+    outline-offset: -3px;
 }
 input[type="radio"]:checked {
     color: yellow;
@@ -114,66 +96,33 @@ input[type="radio"]:checked {
     text-transform: uppercase;
     z-index: 9999;
 }
-select {
-    /* align-self: stretch; */
-    background: none;
-    /* display: flex;
-    flex-direction: row; */
-    appearance: none;
-}
 
-option {
-    position: absolulte;
-    left: 0px;
-    top: 0px;
-    appearance: none;
-    padding: 8px;
-}
-
-/* p {
-    display: flex;
-    width: 140px;
-    height: 140px;
-
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 9999px;
-    background: #e6e9da;
-    box-shadow: 1px 4px 4px 0px rgba(51, 57, 40, 0.7),
-        1px 13px 1px 0px rgba(48, 55, 36, 0.25) inset,
-        0px 0px 0px 10px #7a8663 inset,
-        1px -27px 1px -11px rgba(244, 246, 237, 0.9) inset;
-    color: #0b0b09;
-    font-family: "Averia Libre", Tahoma, Verdana, Geneva, sans-serif;
-    font-size: 66px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-} */
 .invalidDateInput {
     background: red;
+}
+#button-wrapper {
+    gap: 4px;
 }
 button {
     border: 0;
     padding: 0;
-    width: 140px;
-    height: 140px;
+    min-width: 64px;
+    min-height: 64px;
     border-radius: 9999px;
     background: #2f3025;
-    box-shadow: 0px 10px 1px 2px rgba(20, 19, 11, 0.85),
-        0px -8px 4px -3px rgba(25, 25, 15, 0.5) inset,
-        0px 1px 4px -1px rgba(230, 233, 218, 0.4) inset;
     color: inherit;
 }
 
-button:active {
+/* button:active {
     transform: translateY(10px);
-    box-shadow: 0px 1px 1px 2px rgba(20, 19, 11, 0.85),
-        0px -7px 4px -3px rgba(25, 25, 15, 0.5) inset,
-        0px 3px 4px -1px rgba(230, 233, 218, 0.3) inset;
-}
+} */
 
 button:disabled {
     background: grey;
+}
+
+button + p {
+    text-transform: uppercase;
+    background: grey;
+    padding: 8px;
 }

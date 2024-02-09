@@ -14,7 +14,7 @@ const { snapshot, send } = useMachine(flightMachine, {
 </script>
 
 <template>
-  <div class="center-children" id="select-and-inputs">
+  <div class="center-children" id="inputs-before-button">
     <div id="radio-buttons">
       <div class="radio-button-wrapper">
         <input @change="(event) => send({ type: 'changeFlightType', value: (event!.target as HTMLInputElement)!.value })"
@@ -42,7 +42,9 @@ const { snapshot, send } = useMachine(flightMachine, {
       :value="snapshot.context.returnDate.date" type="text" id="return-date" required minlength="6" maxlength="10"
       size="10" />
   </div>
-  <button :disabled="!snapshot.context.canBook" @click="send({ type: 'book' })">
-  </button>
-  <p id="button-label">Book flight</p>
+  <div id="button-wrapper" class="center-children">
+    <button :disabled="!snapshot.context.canBook" @click="send({ type: 'book' })" value="Book flight">
+    </button>
+    <p id="button-label">Book flight</p>
+  </div>
 </template>
