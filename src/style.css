@@ -4,6 +4,7 @@
     position: relative;
     box-sizing: border-box;
     margin: 0;
+    outline: 1px dashed white;
 }
 
 :root {
@@ -64,10 +65,12 @@ main {
     display: flex;
     padding: 32px 32px;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     gap: 40px;
 
-    border-radius: 8px 8px 32px 32px;
+    text-align: center;
+
+    border-radius: 8px;
     background: #484b38;
     box-shadow: 0px -6px 2px 0px hsla(72, 25%, 88%, 0.85) inset,
         6px 4px 4px 0px rgba(20, 19, 11, 0.25) inset,
@@ -75,11 +78,27 @@ main {
 
     color: #e6e9da;
 }
+#select-and-inputs {
+    padding: 8px;
+    place-items: stretch;
+}
 select {
-    align-self: stretch;
+    /* align-self: stretch; */
+    background: none;
+    /* display: flex;
+    flex-direction: row; */
+    appearance: none;
 }
 
-p {
+option {
+    position: absolulte;
+    left: 0px;
+    top: 0px;
+    appearance: none;
+    padding: 8px;
+}
+
+/* p {
     display: flex;
     width: 140px;
     height: 140px;
@@ -99,7 +118,7 @@ p {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-}
+} */
 .invalidDateInput {
     background: red;
 }
