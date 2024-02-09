@@ -17,20 +17,19 @@ const { snapshot, send } = useMachine(flightMachine, {
   <div class="center-children" id="select-and-inputs">
     <div id="radio-buttons">
       <div class="radio-button-wrapper">
-        <input type="radio" name="flight-type" id="one-way" value="one-way" checked />
+        <input @change="(event) => send({ type: 'changeFlightType', value: (event!.target as HTMLInputElement)!.value })"
+          type="radio" name="flight-type" id="one-way" value="one-way"
+          :checked="snapshot.context.flightType === 'one-way'" />
         <label for="one-way">One Way</label>
       </div>
       <div class="radio-button-wrapper">
-        <input type="radio" name="flight-type" id="return" value="return" />
+        <input @change="(event) => send({ type: 'changeFlightType', value: (event!.target as HTMLInputElement)!.value })"
+          type="radio" name="flight-type" id="return" value="return"
+          :checked="snapshot.context.flightType === 'return'" />
         <label for="return">Return</label>
       </div>
     </div>
     <!-- <label for="pet-select">Flight Type</label> -->
-    <select @change="(event) => send({ type: 'changeFlightType', value: (event!.target as HTMLInputElement)!.value })"
-      name="pets" id="pet-select" size="2">
-      <option :selected="snapshot.context.flightType === 'one-way'" value="one-way">One-Way</option>
-      <option :selected="snapshot.context.flightType === 'return'" value="return">Return</option>
-    </select>
     <!-- <label for="start-date">Start Date</label> -->
     <input :class="{ invalidDateInput: !snapshot.context.startDate.isValid }"
       @input="(event) => send({ type: 'changeStartDate', value: (event!.target as HTMLInputElement)!.value })"
