@@ -6,7 +6,7 @@ import { createBrowserInspector } from '@statelyai/inspect';
 
 const { inspect } = createBrowserInspector({
   // Comment out the line below to start the inspector
-  // autoStart: false
+  autoStart: false
 });
 
 const { snapshot, send } = useMachine(flightMachine, {
@@ -57,5 +57,4 @@ const returnDate = toRef(() => snapshot.value.context.returnDate);
     </div>
     <p class="center-children" id="button-label">Book flight</p>
   </div>
-  <span> {{ errors }} </span>
 </template>
