@@ -142,13 +142,13 @@ input[type="radio"]:checked + label {
     height: 16px;
     width: 16px;
     right: 12px;
-    bottom: 8px;
+    bottom: 14px;
     z-index: 9999;
-    color: inherit;
+    color: var(--color-input-invalid-focused-border);
     /* width: min-content;
     height: min-content; */
     position: absolute;
-    font-size: inherit;
+    font-size: 24px;
     font-family: inherit;
     opacity: 0;
 }

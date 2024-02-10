@@ -30,24 +30,32 @@ export const flightMachine = setup({
     }
   },
   actions: {
-    handleConstraints: ({ context, event }) => {
-      if (event.type === 'changeStartDate' || event.type === 'changeReturnDate') {
-        if (isValidDate(event.value)) {
-          context.errors.delete(`${event.type}-invalid`)
+    handleConstraints: ({ context }) => {
+      if (!isValidDate(context.startDate)) {
+        context.errors.add(`changeStartDate-invalid`)
+        context.errors.delete('dates-incompatible')
+      } else {
+        context.errors.delete(`changeStartDate-invalid`)
+      }
+
+      if (context.flightType === 'return') {
+        if (!isValidDate(context.returnDate)) {
+          context.errors.add(`changeReturnDate-invalid`)
+          context.errors.delete('dates-incompatible')
+          return
         } else {
-          context.errors.add(`${event.type}-invalid`);
-          context.errors.delete('dates-incompatible');
+          context.errors.delete(`changeReturnDate-invalid`)
+
+          if (isValidDate(context.startDate) && !areDatesFeasible(context.startDate, context.returnDate)) {
+            context.errors.add('dates-incompatible')
+          } else {
+            context.errors.delete('dates-incompatible')
+          }
         }
+      } else {
+        context.errors.delete(`changeReturnDate-invalid`)
       }
-
-      // error gets added only if dates are also properly formatted
-      if (context.flightType === 'return' && !context.errors.has('changeStartDate-invalid') && !context.errors.has('changeReturnDate-invalid')) {
-        if (areDatesFeasible(context.startDate, context.returnDate)) {
-          context.errors.delete('dates-incompatible');
-        } else { context.errors.add('dates-incompatible') }
-      }
-    },
-
+    }
   },
   guards: {
     "canBook": ({ context }) => { return context.errors.size === 0 }
