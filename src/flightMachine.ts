@@ -32,8 +32,8 @@ export const flightMachine = setup({
     }
   },
   actions: {
-    handleConstraints: (_, params: { errors: Set<FormError>, flightType: FlightType, startDate: string, returnDate: string }) => {
-      const { errors, flightType, startDate, returnDate } = params;
+    handleConstraints: ({ context }) => {
+      const { errors, flightType, startDate, returnDate } = context;
 
       if (!isValidDate(startDate)) {
         errors.add(`changeStartDate-invalid`)
@@ -87,12 +87,6 @@ export const flightMachine = setup({
             }),
             {
               "type": 'handleConstraints',
-              params: ({ context }) => ({
-                errors: context.errors,
-                flightType: context.flightType,
-                startDate: context.startDate,
-                returnDate: context.returnDate,
-              })
             }
           ]
         },
@@ -103,12 +97,6 @@ export const flightMachine = setup({
             }),
             {
               "type": 'handleConstraints',
-              params: ({ context }) => ({
-                errors: context.errors,
-                flightType: context.flightType,
-                startDate: context.startDate,
-                returnDate: context.returnDate,
-              })
             }
           ]
         },
@@ -119,12 +107,6 @@ export const flightMachine = setup({
             }),
             {
               "type": 'handleConstraints',
-              params: ({ context }) => ({
-                errors: context.errors,
-                flightType: context.flightType,
-                startDate: context.startDate,
-                returnDate: context.returnDate,
-              })
             }
           ]
         },
