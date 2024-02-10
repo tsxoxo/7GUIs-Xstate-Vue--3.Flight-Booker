@@ -44,6 +44,7 @@ export const flightMachine = setup({
 
       if (flightType === 'one-way') {
         errors.delete(`changeReturnDate-invalid`)
+        errors.delete('dates-incompatible')
         return
       }
 
