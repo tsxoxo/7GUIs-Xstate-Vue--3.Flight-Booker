@@ -2,6 +2,9 @@ import { setup, assign } from 'xstate';
 
 const INITIAL_DATE = '02.02.2024'
 
+type FormError = 'changeStartDate-invalid' | 'changeReturnDate-invalid' | 'dates-incompatible';
+type FlightType = 'one-way' | 'return'
+
 const areDatesFeasible = (startDate: string, ReturnDate: string) => {
   return new Date(startDate) <= new Date(ReturnDate)
 }
@@ -11,49 +14,54 @@ const isValidDate = (s: string): boolean => {
   var d = new Date(bits[2], bits[1] - 1, bits[0]);
   return d.getFullYear() == bits[2] && d.getMonth() + 1 == bits[1];
 }
-type FormError = 'changeStartDate-invalid' | 'changeReturnDate-invalid' | 'dates-incompatible';
 
 export const flightMachine = setup({
   "types": {
     events: {} as
+      { type: 'changeFlightType', 'value': string } |
       { type: 'changeStartDate', 'value': string } |
       { type: 'changeReturnDate', 'value': string } |
       { type: 'book', } |
-      { type: 'changeFlightType', 'value': string } |
       { type: 'closeModal', 'value': string },
 
     context: {} as {
-      'flightType': 'one-way' | 'return',
+      'errors': Set<FormError>,
+      'flightType': FlightType,
       'startDate': string,
       'returnDate': string,
-      'errors': Set<FormError>,
     }
   },
   actions: {
-    handleConstraints: ({ context }) => {
-      if (!isValidDate(context.startDate)) {
-        context.errors.add(`changeStartDate-invalid`)
-        context.errors.delete('dates-incompatible')
+    handleConstraints: (_, params: { errors: Set<FormError>, flightType: FlightType, startDate: string, returnDate: string }) => {
+      const { errors, flightType, startDate, returnDate } = params;
+
+      if (!isValidDate(startDate)) {
+        errors.add(`changeStartDate-invalid`)
+        errors.delete('dates-incompatible')
       } else {
-        context.errors.delete(`changeStartDate-invalid`)
+        errors.delete(`changeStartDate-invalid`)
       }
 
-      if (context.flightType === 'return') {
-        if (!isValidDate(context.returnDate)) {
-          context.errors.add(`changeReturnDate-invalid`)
-          context.errors.delete('dates-incompatible')
-          return
-        } else {
-          context.errors.delete(`changeReturnDate-invalid`)
+      if (flightType === 'one-way') {
+        errors.delete(`changeReturnDate-invalid`)
+        return
+      }
 
-          if (isValidDate(context.startDate) && !areDatesFeasible(context.startDate, context.returnDate)) {
-            context.errors.add('dates-incompatible')
-          } else {
-            context.errors.delete('dates-incompatible')
-          }
-        }
+      // flightType === 'return'
+      if (!isValidDate(returnDate)) {
+        errors.add(`changeReturnDate-invalid`)
+        errors.delete('dates-incompatible')
+        return
       } else {
-        context.errors.delete(`changeReturnDate-invalid`)
+        errors.delete(`changeReturnDate-invalid`)
+
+        if (!isValidDate(startDate)) { return }
+
+        if (!areDatesFeasible(startDate, returnDate)) {
+          errors.add('dates-incompatible')
+        } else {
+          errors.delete('dates-incompatible')
+        }
       }
     }
   },
@@ -77,7 +85,15 @@ export const flightMachine = setup({
             assign({
               flightType: ({ event }) => event.value,
             }),
-            { "type": 'handleConstraints' }
+            {
+              "type": 'handleConstraints',
+              params: ({ context }) => ({
+                errors: context.errors,
+                flightType: context.flightType,
+                startDate: context.startDate,
+                returnDate: context.returnDate,
+              })
+            }
           ]
         },
         "changeStartDate": {
@@ -85,7 +101,15 @@ export const flightMachine = setup({
             assign({
               startDate: ({ event }) => event.value,
             }),
-            { "type": 'handleConstraints' }
+            {
+              "type": 'handleConstraints',
+              params: ({ context }) => ({
+                errors: context.errors,
+                flightType: context.flightType,
+                startDate: context.startDate,
+                returnDate: context.returnDate,
+              })
+            }
           ]
         },
         "changeReturnDate": {
@@ -93,7 +117,15 @@ export const flightMachine = setup({
             assign({
               returnDate: ({ event }) => event.value,
             }),
-            { "type": 'handleConstraints' }
+            {
+              "type": 'handleConstraints',
+              params: ({ context }) => ({
+                errors: context.errors,
+                flightType: context.flightType,
+                startDate: context.startDate,
+                returnDate: context.returnDate,
+              })
+            }
           ]
         },
         "book": {
