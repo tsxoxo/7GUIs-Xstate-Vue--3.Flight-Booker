@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toRef } from 'vue'
 import { useMachine } from '@xstate/vue'
 import { flightMachine } from './flightMachine';
 import { createBrowserInspector } from '@statelyai/inspect';
@@ -11,8 +12,10 @@ const { inspect } = createBrowserInspector({
 const { snapshot, send } = useMachine(flightMachine, {
   inspect
 })
-const { flightType, errors } = snapshot.value.context;
-
+const errors = toRef(() => snapshot.value.context.errors);
+const flightType = toRef(() => snapshot.value.context.flightType);
+const startDate = toRef(() => snapshot.value.context.startDate);
+const returnDate = toRef(() => snapshot.value.context.returnDate);
 </script>
 
 <template>
@@ -29,28 +32,27 @@ const { flightType, errors } = snapshot.value.context;
         <label for="return">Return</label>
       </div>
     </div>
+    <!-- #TODO invisible labels? -->
     <!-- <label for="pet-select">Flight Type</label> -->
     <!-- <label for="start-date">Start Date</label> -->
     <div class="input-wrapper">
-      <input :class="{ 'invalid-date-input': errors.has('start-date-invalid') }"
+      <input :class="{ 'invalid-date-input': errors.has('changeStartDate-invalid') }"
         @input="(event) => send({ type: 'changeStartDate', value: (event!.target as HTMLInputElement)!.value })"
-        :value="snapshot.context.startDate.date" type="text" id="start-date" required minlength="6" maxlength="10"
-        size="10" />
+        :value="startDate" type="text" id="start-date" required minlength="6" maxlength="10" size="10" />
       <span class="date-conflict-indicator">▼</span>
     </div>
     <!-- <label for="return-date">Return Date</label> -->
     <div class="input-wrapper">
-      <input :disabled="snapshot.context.flightType === 'one-way'"
-        :class="{ 'invalid-date-input': snapshot.context.flightType !== 'one-way' && !snapshot.context.returnDate.isValid }"
+      <input :disabled="flightType !== 'return'"
+        :class="{ 'invalid-date-input': flightType === 'return' && errors.has('changeReturnDate-invalid') }"
         @input="(event) => send({ type: 'changeReturnDate', value: (event!.target as HTMLInputElement)!.value })"
-        :value="snapshot.context.returnDate.date" type="text" id="return-date" required minlength="6" maxlength="10"
-        size="10" />
+        :value="returnDate" type="text" id="return-date" required minlength="6" maxlength="10" size="10" />
       <span class="date-conflict-indicator">▲</span>
     </div>
   </div>
   <div id="button-and-label" class="center-children">
     <div id="button-wrapper">
-      <button :disabled="!snapshot.context.canBook" @click="send({ type: 'book' })" value="Book flight">
+      <button :disabled="errors.size > 0" @click="send({ type: 'book' })" value="Book flight">
       </button>
     </div>
     <p class="center-children" id="button-label">Book flight</p>

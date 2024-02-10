@@ -1,4 +1,3 @@
-import { errorMessages } from 'vue/compiler-sfc';
 import { setup, assign } from 'xstate';
 
 const INITIAL_DATE = '02.02.2024'
@@ -12,18 +11,7 @@ const isValidDate = (s: string): boolean => {
   var d = new Date(bits[2], bits[1] - 1, bits[0]);
   return d.getFullYear() == bits[2] && d.getMonth() + 1 == bits[1];
 }
-const isReadyToBook = (flightType: string, startDate: string, returnDate: string) => {
-  if (flightType === "one-way") {
-    return isValidDate(startDate)
-  }
-  return isValidDate(startDate) && isValidDate(returnDate) && areDatesFeasible(startDate, returnDate)
-}
-type FormError = 'start-date-invalid' | 'return-date-invalid' | 'dates-incompatible';
-
-const mapEventsToErrors = {
-  'changeStartDate': 'start-date-invalid',
-  'changeReturnDate': 'return-date-invalid',
-}
+type FormError = 'changeStartDate-invalid' | 'changeReturnDate-invalid' | 'dates-incompatible';
 
 export const flightMachine = setup({
   "types": {
@@ -36,45 +24,33 @@ export const flightMachine = setup({
 
     context: {} as {
       'flightType': 'one-way' | 'return',
-      'startDate': { date: string, isValid: boolean },
-      'returnDate': { date: string, isValid: boolean },
+      'startDate': string,
+      'returnDate': string,
       'errors': Set<FormError>,
-      'canBook': boolean,
     }
-    // snapshot.context.flightType === 'return' && !snapshot.context.areDatesFeasible || !snapshot.context.startDate.isValid
   },
   actions: {
     handleConstraints: ({ context, event }) => {
-      if (isValidDate(event.value)) {
-        context.errors.delete(mapEventsToErrors[event.type])
-      } else { context.errors.add.mapEventsToErrors[event.type] }
+      if (event.type === 'changeStartDate' || event.type === 'changeReturnDate') {
+        if (isValidDate(event.value)) {
+          context.errors.delete(`${event.type}-invalid`)
+        } else {
+          context.errors.add(`${event.type}-invalid`);
+          context.errors.delete('dates-incompatible');
+        }
+      }
 
-      if (areDatesFeasible(context.startDate.date, context.returnDate.date)) {
-        context.errors.delete('dates-incompatible');
-      } else { context.errors.add('dates-incompatible') }
+      // error gets added only if dates are also properly formatted
+      if (context.flightType === 'return' && !context.errors.has('changeStartDate-invalid') && !context.errors.has('changeReturnDate-invalid')) {
+        if (areDatesFeasible(context.startDate, context.returnDate)) {
+          context.errors.delete('dates-incompatible');
+        } else { context.errors.add('dates-incompatible') }
+      }
     },
-    "onChangeFlightType": assign({
-      flightType: ({ event }) => event.value,
-      canBook: ({ context, event }) => isReadyToBook(event.value, context.startDate.date, context.returnDate.date)
-    }),
-    "onChangeStartDate": assign({
-      errors: ({ event, context }) => (isValidDate(event.value) ? context.errors.delete('start-date-invalid') : context.errors.add('start-date-invalid')),
-      startDate: ({ event, context }) => ({
-        date: event.value,
-        isValid: isValidDate(event.value)
-      }),
-      canBook: ({ context, event }) => isReadyToBook(context.flightType, event.value, context.returnDate.date)
-    }),
-    "onChangeReturnDate": assign({
-      returnDate: ({ event }) => ({
-        date: event.value,
-        isValid: isValidDate(event.value)
-      }),
-      canBook: ({ context, event }) => isReadyToBook(context.flightType, context.startDate.date, event.value)
-    }),
+
   },
   guards: {
-    "canBook": ({ context }) => { return context.canBook }
+    "canBook": ({ context }) => { return context.errors.size === 0 }
   },
 }).createMachine({
   "id": "flightBooker",
@@ -82,38 +58,40 @@ export const flightMachine = setup({
   "context": {
     errors: new Set([]),
     flightType: 'one-way',
-    startDate: {
-      date: INITIAL_DATE,
-      isValid: true
-    },
-    returnDate: {
-      date: INITIAL_DATE,
-      isValid: true
-    },
-    canBook: true
+    startDate: INITIAL_DATE,
+    returnDate: INITIAL_DATE
   },
   "states": {
     "waitForInput": {
       "on": {
+        "changeFlightType": {
+          "actions": [
+            assign({
+              flightType: ({ event }) => event.value,
+            }),
+            { "type": 'handleConstraints' }
+          ]
+        },
         "changeStartDate": {
-          "actions": {
-            "type": "onChangeStartDate"
-          }
+          "actions": [
+            assign({
+              startDate: ({ event }) => event.value,
+            }),
+            { "type": 'handleConstraints' }
+          ]
         },
         "changeReturnDate": {
-          "actions": {
-            "type": "onChangeReturnDate"
-          }
+          "actions": [
+            assign({
+              returnDate: ({ event }) => event.value,
+            }),
+            { "type": 'handleConstraints' }
+          ]
         },
         "book": {
           "target": "confirmBooking",
           "guard": "canBook"
         },
-        "changeFlightType": {
-          "actions": {
-            "type": "onChangeFlightType"
-          }
-        }
       }
     },
     "confirmBooking": {
