@@ -22,7 +22,7 @@ export const flightMachine = setup({
       { type: 'changeStartDate', 'value': string } |
       { type: 'changeReturnDate', 'value': string } |
       { type: 'book', } |
-      { type: 'closeModal', 'value': string },
+      { type: 'dismiss' },
 
     context: {} as {
       'errors': Set<FormError>,
@@ -119,7 +119,7 @@ export const flightMachine = setup({
     },
     "confirmBooking": {
       "on": {
-        "closeModal": {
+        "dismiss": {
           "target": "waitForInput",
         },
       }
