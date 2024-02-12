@@ -82,6 +82,9 @@ main {
     place-items: stretch;
     padding: 12px 24px;
     background: var(--color-inputs-before-button-bg);
+    box-shadow: 0px 1px 0.5px #7c8a6a,
+        inset 0px 0px 2px 2px rgba(128, 146, 104, 0.25);
+    border-radius: 6px;
 }
 #radio-buttons {
     display: grid;
@@ -112,15 +115,21 @@ input[type="radio"] {
 
     outline: 5px var(--color-input-disabled-bg) solid;
     outline-offset: -5px;
+
+    box-shadow: 0px 3px 2px 2px rgba(0, 0, 0, 0.2),
+        0px 3px 1px rgba(52, 56, 47, 0.4);
+    border-radius: 2px;
 }
+
+input[type="radio"]:checked {
+    box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.15);
+}
+
 input[type="radio"]:focus-visible + label {
     /* text-decoration: underline; */
     outline: 2px solid var(--color-radio-checked);
-    /* outline: 10px solid brown;
-    background: white; */
 }
 input[type="radio"] + label {
-    /* padding: 8px; */
     overflow-wrap: normal;
     color: var(--color-input-disabled-bg);
     font-weight: 600;
@@ -145,8 +154,6 @@ input[type="radio"]:checked + label {
     bottom: 14px;
     z-index: 9999;
     color: var(--color-input-invalid-focused-border);
-    /* width: min-content;
-    height: min-content; */
     position: absolute;
     font-size: 24px;
     font-family: inherit;
@@ -166,14 +173,23 @@ input[type="text"] {
 
     color: var(--color-dark);
     background: var(--color-light);
+
+    border-radius: 1px;
+    box-shadow: inset 0px 0.5px 0.5px 0.5px #839071,
+        inset 0px -0.5px 0.5px #f9f9f9;
 }
 
 input[type="text"]:disabled {
     background: var(--color-input-disabled-bg);
+    box-shadow: inset 0px 0.5px 0.5px 0.5px #839071,
+        inset 0px -0.5px 0.5px rgba(249, 249, 249, 0.25);
 }
 
 input[type="text"]:focus {
     background: var(--color-input-focused-bg);
+    box-shadow: inset 0px -0.5px 0.5px rgba(249, 249, 249, 0.4),
+        inset 0px 0.5px 0.5px 0.5px rgba(133, 144, 113, 0.4);
+
     outline: 2px solid var(--color-input-focused-border);
     outline-offset: -3px;
 }
@@ -181,6 +197,8 @@ input[type="text"]:focus {
 /* #TODO: button and radio focus states */
 input[type="text"].invalid-date-input {
     background: var(--color-input-invalid-bg);
+    box-shadow: inset 0px 0.5px 0.5px 0.5px rgba(144, 121, 113, 0.4),
+        inset 0px -0.5px 0.5px #f9f9f9;
 }
 input[type="text"].invalid-date-input:focus {
     background: var(--color-input-invalid-focused-bg);
@@ -199,6 +217,8 @@ input[type="text"].invalid-date-input:focus {
 
     height: 64px;
     width: 64px;
+
+    box-shadow: 0px 2px 2px rgba(42, 47, 24, 0.5);
 }
 button {
     appearance: none;
@@ -207,16 +227,26 @@ button {
     height: 100%;
     background: var(--color-light);
     border-radius: inherit;
+    box-shadow: inset 0px 9px 2px 4px rgba(213, 215, 199, 0.57),
+        inset 0px -9px 2px 3px rgba(232, 234, 221, 0.8);
 }
-/* button:active {
-    transform: translateY(10px);
-} */
+/* #TODO style the active state better */
+button:active {
+    background: color-mix(in hsl longer hue, var(--color-light) 98%, black);
+    box-shadow: inset 0px 18px 1px 4px rgba(213, 215, 199, 0.57),
+        inset 0px -2px 1px 3px hsla(69, 24%, 69%, 0.1);
+}
 
 button:disabled {
     background: var(--color-button-disabled);
+    box-shadow: inset 0px 9px 2px 4px rgba(205, 86, 47, 0.5),
+        inset 0px -9px 2px 3px rgba(216, 123, 93, 0.5);
 }
-button:focus {
+button:focus-visible {
     background: var(--color-input-focused-bg);
+    box-shadow: inset 0px 9px 2px 4px rgba(176, 232, 174, 0.57),
+        inset 0px -9px 2px 3px rgba(226, 252, 209, 0.5);
+
     outline: 3px solid var(--color-input-focused-border);
     outline-offset: -5px;
     /* background: radial-gradient(
@@ -235,4 +265,5 @@ button:focus {
     background: var(--color-dark);
     padding: 8px 16px;
     border-radius: 1px;
+    box-shadow: 0px 1px 2px rgba(31, 35, 18, 0.25), inset 0px 0.5px 1px #f4f5f2;
 }
