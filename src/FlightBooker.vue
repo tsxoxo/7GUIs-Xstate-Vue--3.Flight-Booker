@@ -19,7 +19,7 @@ const returnDate = toRef(() => snapshot.value.context.returnDate);
 </script>
 
 <template>
-  <div class="center-children" id="inputs-before-button">
+  <div class="center-children plate-shadow" id="inputs-before-button">
     <div id="radio-buttons">
       <div class="radio-button-wrapper">
         <input @change="(event) => send({ type: 'changeFlightType', value: (event!.target as HTMLInputElement)!.value })"
@@ -48,9 +48,12 @@ const returnDate = toRef(() => snapshot.value.context.returnDate);
   </div>
   <div id="button-and-label" class="center-children">
     <div id="button-wrapper">
-      <button :disabled="errors.size > 0" @click="send({ type: 'book' })" value="Book flight">
+      <button :disabled="errors.size > 0" @click="send({ type: snapshot.value === 'waitForInput' ? 'book' : 'dismiss' })"
+        value="Book flight">
       </button>
     </div>
-    <p class="center-children" id="button-label">Book flight</p>
+    <p class="center-children plate-shadow" id="button-label">{{ snapshot.value === 'waitForInput' ? 'Book flight' :
+      `Flight booked!
+      Press button to reset` }}</p>
   </div>
 </template>
